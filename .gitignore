@@ -1,0 +1,4 @@
+/dataset
+Bed-availibility-Detection/.ipynb_checkpoints/*.ipynb
+.*
+!/.gitignore
