@@ -2,3 +2,4 @@
 Bed-availibility-Detection/.ipynb_checkpoints/*.ipynb
 .*
 !/.gitignore
+yolov8m.pt
