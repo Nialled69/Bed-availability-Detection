@@ -1,6 +1,6 @@
-
-The dataset includes 428 images.
-Hospital-bed are annotated in YOLOv8 format.
+The dataset (link provided in the repository) includes 428 images.
+The Hospital-beds are annotated in YOLOv8 format.
+Check the ``data.yaml`` file present within the dataset for more information.
 
 The following pre-processing was applied to each image:
 * Auto-orientation of pixel data (with EXIF-orientation stripping)
@@ -9,4 +9,3 @@ The following pre-processing was applied to each image:
 The following augmentation was applied to create 3 versions of each source image:
 * Equal probability of one of the following 90-degree rotations: none, clockwise, counter-clockwise
 * Random rotation of between -15 and +15 degrees
-
