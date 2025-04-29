@@ -33,21 +33,21 @@ Training Details for Bed Detector:
 
 - Framework: Ultralytics YOLOv8
 
-- Input: ~2000 images of hospital beds (manually custom annotated)
+- Input: ~375 images of hospital beds (manually custom annotated)
 
-- Output: best.pt model file after training epochs
+- Output: best.pt model file after training for 50 epochs on CUDA
 
 ---
 
 ### 🧹 How Detection Happens
 
-- Step 1: Detect all hospital beds in a frame using the custom YOLOv8 bed model.
+- Step 1: Detect all hospital beds in a frame using our custom YOLOv8 bed model (Check Bed_Detection.ipynb file for further details)
 
 - Step 2: Detect all persons in the same frame using the YOLOv8 COCO pretrained model.
 
 - Step 3: For each detected person:
 
-    * Check if they are standing (ignored if height > 1.8 × width).
+    * Check if they are standing (ignored if height > (1.8 × width)).
 
     * For lying persons, calculate IoU with each detected bed.
 
@@ -84,27 +84,29 @@ This approach ensures:
 
 - Matching Rate = (Correctly assigned beds) ÷ (Total beds detected)
 
-- During testing, typical matching accuracy is around 85–90% depending on:
+- During testing, typical matching accuracy is around 78–87% depending on:
 
     * Camera angle
 
-    * Bed layout
+    * Bad bed layout
 
-    * Quality of training data
+    * Quality of input media file
+ 
+    * less amount of media in training dataset 
 
 - Errors mainly occur when:
 
-    * Person is partially lying
+    * Bed is too far from the camera.
 
-    * Bed is occluded or outside frame
+    * Bed is occluded or outside frame.
+ 
+    * Person standing in front of camera, shadowing the patient and as a result, the patient doesn't get detected.
 
 ---
 
 ### 🎮 Real-time Video Detection
 
 - Video frames are processed using YOLOv8 at resized 640×480 resolution.
-
-- Multi-threading is used to detect on every 2–3 frames, achieving near 30 FPS real-time.
 
 - Output visualizes:
 
@@ -114,7 +116,7 @@ This approach ensures:
 
     * Red boxes → occupied beds
 
-Free bed count and occupancy details are shown live.
+Free bed count and occupancy details are shown live and updated on the database in real time.
 
 ---
 
@@ -142,7 +144,7 @@ pip install ultralytics opencv-python numpy
 person_model = YOLO("yolov8m.pt")
 ```
 ```python
-bed_model = YOLO("D:/runs/detect/train3/weights/best.pt")
+bed_model = YOLO("D:/runs/detect/train3/weights/best.pt")  # This is my runs folder, your's could be different
 ```
 
 3. Run on an image:
@@ -161,18 +163,24 @@ Press 'q' to exit visualization.
 
 ### 🔥 Key Highlights
 
-Dual YOLO models working together
+- Dual YOLO models working together synchronously.
 
-Custom IoU based bed-person matching logic
+- Custom trained Bed Detection model trained on 375+ bed image dataset for 50 epochs.
 
-Optimized for real-time video applications
+- Custom IoU based bed-person matching logic for optimised output.
 
-Modular, extendable detection pipeline
+- Takes both image and video files as input and process them simultaneously. (works with CCTV footagery)
+
+- Modular, extendable detection pipeline.
 
 ---
 
 ### ✨ Final Thought
 
-This project showcases how deep learning and object detection can be combined to solve real-world problems like hospital bed management — making healthcare faster, smarter, and more efficient.
+With the advent of this project, the necessity of manually handling availability of beds in hospitals and nursing homes is finally history. 
 
+With automation like this, bed availability can be easily automated - making healthcare faster, smarter, and more efficient.
 
+This project showcases how deep learning and object detection can be combined to solve real-world problems like hospital bed management.
+
+##### Made with 💙 and late night ☕ by Sarthik
