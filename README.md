@@ -47,107 +47,119 @@ Training Details for Bed Detector:
 
 - Step 3: For each detected person:
 
-Check if they are standing (ignored if height > 1.8 × width).
+    * Check if they are standing (ignored if height > 1.8 × width).
 
-For lying persons, calculate IoU with each detected bed.
+    * For lying persons, calculate IoU with each detected bed.
 
-Assign the person to the bed with the highest IoU (if IoU ≥ 0.08).
+    * Assign the person to the bed with the highest IoU (if IoU ≥ 0.08).
 
-Step 4: Count all assigned beds → these are occupied beds.
+- Step 4: Count all assigned beds → then count the availaible beds.
 
-Free Beds = Total Beds - Occupied Beds
+    * Free Beds = Total Beds - Occupied Beds
 
-🔠 How Matching (Assignment) Works
+---
 
-IoU (Intersection over Union) is calculated between:
+### 🔠 How Matching (Assignment) Works
 
-Person bounding box
+- IoU (Intersection over Union) is calculated between:
 
-Bed bounding box
+    * Person bounding box
 
-IoU Formula:
-'IoU = Area of Overlap / Area of Union'
+    * Bed bounding box
 
-A threshold of 0.08 is set — if IoU ≥ 0.08 → person is assigned to that bed.
+- IoU Formula:
+`IoU = Area of Overlap / Area of Union`
+
+- A threshold of 0.08 is set — if IoU ≥ 0.08 → person is assigned to that bed.
 
 This approach ensures:
 
-Only lying persons are considered
+- Only lying persons are considered
 
-Only meaningful overlaps are assigned
+- Only meaningful overlaps are assigned
 
-📈 Matching Accuracy
+---
 
-Matching Rate = (Correctly assigned beds) ÷ (Total beds detected)
+### 📈 Matching Accuracy
 
-During testing, typical matching accuracy is around 85–90% depending on:
+- Matching Rate = (Correctly assigned beds) ÷ (Total beds detected)
 
-Camera angle
+- During testing, typical matching accuracy is around 85–90% depending on:
 
-Bed layout
+    * Camera angle
 
-Quality of training data
+    * Bed layout
 
-Errors mainly occur when:
+    * Quality of training data
 
-Person is partially lying
+- Errors mainly occur when:
 
-Bed is occluded or outside frame
+    * Person is partially lying
 
-🎮 Real-time Video Detection
+    * Bed is occluded or outside frame
 
-Video frames are processed using YOLOv8 at resized 640×480 resolution.
+---
 
-Multi-threading is used to detect on every 2–3 frames, achieving near 30 FPS real-time.
+### 🎮 Real-time Video Detection
 
-Output visualizes:
+- Video frames are processed using YOLOv8 at resized 640×480 resolution.
 
-Blue boxes → detected beds
+- Multi-threading is used to detect on every 2–3 frames, achieving near 30 FPS real-time.
 
-Green boxes → detected persons
+- Output visualizes:
 
-Red boxes → occupied beds
+    * Blue boxes → detected beds
+
+    * Green boxes → detected persons
+
+    * Red boxes → occupied beds
 
 Free bed count and occupancy details are shown live.
 
-⚖️ Possible Optimizations (Future)
+---
 
-Switch to YOLOv8n (nano) for ultra-smooth 60 FPS detection.
+### ⚖️ Possible Optimizations (Future)
 
-TensorRT acceleration for faster GPU inference.
+- Switch to YOLOv8n (nano) for ultra-smooth 60 FPS detection.
 
-Track persons over time (DeepSORT tracking) to reduce detection overhead.
+- TensorRT acceleration for faster GPU inference.
 
-Model quantization (FP16, INT8) to further speed up predictions.
+- Track persons over time (DeepSORT tracking) to reduce detection overhead.
 
-🛠️ How To Run
+- Model quantization (FP16, INT8) to further speed up predictions.
 
-Install dependencies:
-'pip install ultralytics opencv-python numpy'
+---
 
-Initialize models:
-'person_model = YOLO("yolov8m.pt")'
-'bed_model = YOLO("D:/runs/detect/train3/weights/best.pt")'
+### 🛠️ How To Run
 
-Run on an image:
-'detect_bed_occupancy("sample_image.jpg")'
+1. Installing the dependencies:
+```python
+pip install ultralytics opencv-python numpy
+```
 
-Run on a video:
-'detect_bed_occupancy_realtime("sample_video.mp4")'
+2. Initialize models:
+```python
+person_model = YOLO("yolov8m.pt")
+```
+```python
+bed_model = YOLO("D:/runs/detect/train3/weights/best.pt")
+```
+
+3. Run on an image:
+```python
+detect_bed_occupancy("sample_image.jpg")
+```
+
+4. Run on a video:
+```python
+detect_bed_occupancy_realtime("sample_video.mp4")
+```
 
 Press 'q' to exit visualization.
 
-📂 Project Structure
+---
 
-train/ → YOLO training images and labels for bed detector
-
-weights/ → trained best.pt model
-
-utils/ → helper functions (IoU calculation, frame processing)
-
-main.py → entry point for detection on images/videos
-
-🔥 Key Highlights
+### 🔥 Key Highlights
 
 Dual YOLO models working together
 
@@ -157,7 +169,9 @@ Optimized for real-time video applications
 
 Modular, extendable detection pipeline
 
-✨ Final Thought
+---
+
+### ✨ Final Thought
 
 This project showcases how deep learning and object detection can be combined to solve real-world problems like hospital bed management — making healthcare faster, smarter, and more efficient.
 
